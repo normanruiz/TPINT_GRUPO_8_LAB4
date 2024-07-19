@@ -8,37 +8,28 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import Dao.UsuarioDao;
 import Dominio.Usuario;
+import Exception.failLoginException;
 
-/**
- * Servlet implementation class Login
- */
-@WebServlet("/Login")
+@WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     public LoginServlet() {
+    	
         super();
-        // TODO Auto-generated constructor stub
+        
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		
 		response.getWriter().append("Served at: ").append(request.getContextPath());
+		
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		UsuarioDao usuarioDao ;
@@ -47,45 +38,41 @@ public class LoginServlet extends HttpServlet {
 		try
 		{
 	        String usuarioAux = request.getParameter("username");
-	        String contraseniaAux = request.getParameter("password");
+	        String contraseñaAux = request.getParameter("password");
 			usuarioDao = new UsuarioDao();
-			usuario = usuarioDao.Validar(usuarioAux, contraseniaAux);
-			
-			
-					if( usuario.getId() == 0) {
-						
-						System.out.println("Se fue por usuario nulo");
-						RequestDispatcher requestDispatcher = request.getRequestDispatcher("/ErrorSesion.jsp");
-						requestDispatcher.forward(request, response);
-					}
-					
-			
-			        if (usuario.getAcceso() == "Administrador") {
-						RequestDispatcher requestDispatcher = request.getRequestDispatcher("/PortalAdministradores.jsp");   
-						requestDispatcher.forward(request, response);	
-					}
-			
-					if (usuario.getAcceso() == "Cliente") {
-						request.getSession().setAttribute("usuario", usuario);
-						RequestDispatcher requestDispatcher = request.getRequestDispatcher("/clientePerfilServlet");   
-						requestDispatcher.forward(request, response);
-					}
-			
-		
-					if (usuario != null && usuario.getId() != 0) {
-					    HttpSession session = request.getSession();
-					    session.setAttribute("usuario", usuario);
-					    // Redirecciona según el tipo de acceso...
-					}
-		
-		
-		
-		
+			usuario = usuarioDao.Validar(usuarioAux, contraseñaAux);
+	
+			if( usuario.getId() == 0) {
+				throw new failLoginException();
+	        } else {
+	        	if (usuario.getAcceso() == "Administrador") {
+					request.getSession().setAttribute("usuario", usuario);
+					RequestDispatcher requestDispatcher = request.getRequestDispatcher("/PortalAdministradores.jsp");   
+					requestDispatcher.forward(request, response);	
+				} else if (usuario.getAcceso() == "Cliente") {
+					request.getSession().setAttribute("usuario", usuario);
+					RequestDispatcher requestDispatcher = request.getRequestDispatcher("/PortalClientes.jsp");   
+					requestDispatcher.forward(request, response);
+				}
+	        }
 		} 
-		catch (Exception e) 
-		{
+		catch (failLoginException e) {
+	        request.setAttribute("exception", e);
+	        request.setAttribute("paginaOrigen", "Login.jsp");
+			RequestDispatcher requestDispatcher = request.getRequestDispatcher("/ErrorPage.jsp");
+			requestDispatcher.forward(request, response);
+		}
+		catch (NullPointerException e) { // TO DO: Corregir esta excepcion por algo mas acorde.
+	        request.setAttribute("exception", "No se pudo establecer la comunicacion con la base de datos...");
+	        request.setAttribute("paginaOrigen", "Login.jsp");
+			RequestDispatcher requestDispatcher = request.getRequestDispatcher("/ErrorPage.jsp");
+			requestDispatcher.forward(request, response);
+		}
+		catch (Exception e) {
 			e.printStackTrace();
-			RequestDispatcher requestDispatcher = request.getRequestDispatcher("/ErrorSesion.jsp");
+	        request.setAttribute("paginaOrigen", "Login.jsp");
+			request.setAttribute("exception", "Uppsss... Algo salio muy mal!!!");
+			RequestDispatcher requestDispatcher = request.getRequestDispatcher("/ErrorPage.jsp");
 			requestDispatcher.forward(request, response);
 		}
 

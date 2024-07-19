@@ -1,7 +1,6 @@
 package Dominio;
 
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,15 +15,14 @@ public class Cliente {
 	private String nombre;
 	private String apellido;
 	private SEXO sexo;
-	private Pais nacionalidad;
+	private String nacionalidad;
 	private java.util.Date fechaNacimiento; 
 	private String direccion;
 	private String localidad;
-	private Provincia provincia;
+	private String provincia;
 	private String correoElectronico;
-	private Telefono telefono1;
-	private Telefono telefono2;
-	private ArrayList<Cuenta> cuentas;
+	private List<Telefono> telefonos;
+	private List<Cuenta> cuentas; // List<Cuenta> cuentas = Arrays.asList(new Cuenta[3]);
 	private ESTADO estado;
 	
 	public void setId(int id) {
@@ -32,12 +30,6 @@ public class Cliente {
 	}
 	public void setDni(String dni) {
 		this.dni = dni;
-	}
-	public Pais getNacionalidad() {
-		return nacionalidad;
-	}
-	public void setNacionalidad(Pais nacionalidad) {
-		this.nacionalidad = nacionalidad;
 	}
 	public void setCuil(String cuil) {
 		this.cuil = cuil;
@@ -74,12 +66,12 @@ public class Cliente {
 			this.sexo = SEXO.Femenino;
 		}
 	}
-	//public String getNacionalidad() {
-	//		return nacionalidad;
-	//}
-//public void setNacionalidad(String nacionalidad) {
-	//		this.nacionalidad = nacionalidad;
-		//	}
+	public String getNacionalidad() {
+		return nacionalidad;
+	}
+	public void setNacionalidad(String nacionalidad) {
+		this.nacionalidad = nacionalidad;
+	}
 	public java.util.Date getFechaNacimiento() {
 		return fechaNacimiento;
 	}
@@ -98,10 +90,10 @@ public class Cliente {
 	public void setLocalidad(String localidad) {
 		this.localidad = localidad;
 	}
-	public Provincia getProvincia() {
+	public String getProvincia() {
 		return provincia;
 	}
-	public void setProvincia(Provincia provincia) {
+	public void setProvincia(String provincia) {
 		this.provincia = provincia;
 	}
 	public String getCorreoElectronico() {
@@ -110,23 +102,16 @@ public class Cliente {
 	public void setCorreoElectronico(String correoElectronico) {
 		this.correoElectronico = correoElectronico;
 	}
-
-	public Telefono getTelefono1() {
-		return telefono1;
+	public List<Telefono> getTelefonos() {
+		return telefonos;
 	}
-	public void setTelefono1(Telefono telefono1) {
-		this.telefono1 = telefono1;
+	public void setTelefonos(List<Telefono> telefonos) {
+		this.telefonos = telefonos;
 	}
-	public Telefono getTelefono2() {
-		return telefono2;
-	}
-	public void setTelefono2(Telefono telefono2) {
-		this.telefono2 = telefono2;
-	}
-	public ArrayList<Cuenta> getCuentas() {
+	public List<Cuenta> getCuentas() {
 		return cuentas;
 	}
-	public void setCuentas(ArrayList<Cuenta> cuentas) {
+	public void setCuentas(List<Cuenta> cuentas) {
 		this.cuentas = cuentas;
 	}
 	public ESTADO getEstado() {
@@ -153,22 +138,38 @@ public class Cliente {
 		this.localidad = null;
 		this.provincia = null;
 		this.correoElectronico = null;
-		this.telefono1 = null; // TO DO: Arreglar esto para inicializarlo como unla lista 
-		this.telefono2 = null;
-		this.cuentas = new ArrayList<>();
-		
+		this.telefonos = null; // TO DO: Arreglar esto para inicializarlo como unla lista 
+		this.cuentas = Arrays.asList(new Cuenta[3]);
 		this.estado = null;
 	}
+	
+	public Cliente(String dni, String cuil, String nombre, String apellido, SEXO sexo, String nacionalidad,
+			Date fechaNacimiento, String direccion, String localidad, String provincia, String correoElectronico,
+			List<Telefono> telefonos, List<Cuenta> cuentas, ESTADO estado) {
+		super();
+		this.dni = dni;
+		this.cuil = cuil;
+		this.nombre = nombre;
+		this.apellido = apellido;
+		this.sexo = sexo;
+		this.nacionalidad = nacionalidad;
+		this.fechaNacimiento = fechaNacimiento;
+		this.direccion = direccion;
+		this.localidad = localidad;
+		this.provincia = provincia;
+		this.correoElectronico = correoElectronico;
+		this.telefonos = telefonos;
+		this.cuentas = cuentas;
+		this.estado = estado;
+	}
+	
 	@Override
 	public String toString() {
 		return "Cliente [id=" + id + ", dni=" + dni + ", cuil=" + cuil + ", nombre=" + nombre + ", apellido=" + apellido
 				+ ", sexo=" + sexo + ", nacionalidad=" + nacionalidad + ", fechaNacimiento=" + fechaNacimiento
 				+ ", direccion=" + direccion + ", localidad=" + localidad + ", provincia=" + provincia
-				+ ", correoElectronico=" + correoElectronico + ", telefono1=" + telefono1 + ", telefono2=" + telefono2
-				+ ", cuentas=" + cuentas + ", estado=" + estado + "]";
+				+ ", correoElectronico=" + correoElectronico + ", telefonos=" + telefonos + ", cuentas=" + cuentas
+				+ ", estado=" + estado + "]";
 	}
-	
-
-
 	
 }

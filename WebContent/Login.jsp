@@ -58,7 +58,7 @@
 
 <div class="login-container">
     <h2>Login</h2>
-    <form action="Login" method="post">
+    <form action="LoginServlet" method="post">
         <label for="username">User:</label>
         <input type="text" id="username" name="username" required /><br/>
         <label for="password">Password:</label>
