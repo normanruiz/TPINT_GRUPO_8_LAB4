@@ -44,6 +44,8 @@
 	                <th>Localidad</th>
 	                <th>Provincia</th>
 	                <th>E-mail</th>
+	                <th>Tel. Primario</th>
+	                <th>Tel. Secundario</th>
 	                <th>Estado</th>
 	            </tr>
 	        </thead>
@@ -66,6 +68,8 @@
 	                    <td><%= cliente.getLocalidad()%></td>
 	                    <td><%= cliente.getProvincia()%></td>
 	                    <td><%= cliente.getCorreoElectronico()%></td>
+	                    <td><% if (!(cliente.getTelefonos()).isEmpty()) { %> <%= (cliente.getTelefonos()).get(0) %> <% } %></td>
+	                    <td><% if (!(cliente.getTelefonos()).isEmpty()) { %> <%= (cliente.getTelefonos()).get(1) %> <% } %></td>
 	                    <td><%= cliente.getEstado()%></td>
     					<td class="action-buttons" >
     						<div style="display:flex">

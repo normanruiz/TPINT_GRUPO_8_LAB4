@@ -1,6 +1,7 @@
 package Dominio;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class Cliente {
 	private String localidad;
 	private String provincia;
 	private String correoElectronico;
-	private List<Telefono> telefonos;
+	private ArrayList<Telefono> telefonos;
 	private List<Cuenta> cuentas; // List<Cuenta> cuentas = Arrays.asList(new Cuenta[3]);
 	private ESTADO estado;
 	
@@ -102,16 +103,19 @@ public class Cliente {
 	public void setCorreoElectronico(String correoElectronico) {
 		this.correoElectronico = correoElectronico;
 	}
-	public List<Telefono> getTelefonos() {
+	public ArrayList<Telefono> getTelefonos() {
 		return telefonos;
 	}
-	public void setTelefonos(List<Telefono> telefonos) {
+	public Telefono getTelefonos(int index) {
+		return telefonos.get(index);
+	}
+	public void setTelefonos(ArrayList<Telefono> telefonos) {
 		this.telefonos = telefonos;
 	}
 	public List<Cuenta> getCuentas() {
 		return cuentas;
 	}
-	public void setCuentas(List<Cuenta> cuentas) {
+	public void setCuentas(ArrayList<Cuenta> cuentas) {
 		this.cuentas = cuentas;
 	}
 	public ESTADO getEstado() {
@@ -145,7 +149,7 @@ public class Cliente {
 	
 	public Cliente(String dni, String cuil, String nombre, String apellido, SEXO sexo, String nacionalidad,
 			Date fechaNacimiento, String direccion, String localidad, String provincia, String correoElectronico,
-			List<Telefono> telefonos, List<Cuenta> cuentas, ESTADO estado) {
+			ArrayList<Telefono> telefonos, ArrayList<Cuenta> cuentas, ESTADO estado) {
 		super();
 		this.dni = dni;
 		this.cuil = cuil;
@@ -171,5 +175,7 @@ public class Cliente {
 				+ ", correoElectronico=" + correoElectronico + ", telefonos=" + telefonos + ", cuentas=" + cuentas
 				+ ", estado=" + estado + "]";
 	}
+	
+	
 	
 }

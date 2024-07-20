@@ -59,8 +59,7 @@ CREATE TABLE clientes
 CREATE TABLE telefonos
 (
     id_telefono INT NOT NULL AUTO_INCREMENT,
-    telefono1 VARCHAR(20) UNIQUE NOT NULL,
-    telefono2  VARCHAR(20) UNIQUE DEFAULT NULL,
+    telefono VARCHAR(20) UNIQUE NOT NULL,
     id_cliente INT NOT NULL,
     PRIMARY KEY (id_telefono),
     FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente)
@@ -159,4 +158,4 @@ BEGIN
     END IF;
 END //
 
-DELIMITER;
+DELIMITER ;

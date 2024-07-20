@@ -21,103 +21,8 @@ public class ClienteDao implements iClienteDao{
     private static final String bajaLogica = "UPDATE clientes SET estado = 'false' WHERE id_cliente = ?;";
     private static final String updateCliente = "UPDATE clientes SET DNI = ?, CUIL = ?, nombre = ?, apellido = ?, sexo = ?, nacionalidad = ?, fecha_nacimiento = ?, direccion = ?, localidad = ?, provincia = ?, correo_electronico = ?, estado = ? WHERE id_cliente = ?;";
     private static final String altaLogica = "UPDATE clientes SET estado = 'true' WHERE id_cliente = ?;";
-    private static final String modificarTelefonos = "UPDATE telefonos SET telefono1 = ?, telefono2 =? WHERE id_cliente =?";
-    private static final String insertTelefonos = "INSERT INTO `bd_banco`.`telefonos` (telefono1, telefono2, id_cliente) VALUES (?, ?, ?)";
     private static final String listarIdClientes = "SELECT id_cliente FROM bd_banco.clientes";
 
-    public int ModificacionTelefonos(String telefonoModificado1, String telefonoModificado2, int id_cliente) {
-
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            return 0;
-        }
-
-        Connection conexion = null;
-        PreparedStatement statement = null;
-        int filas = 0;
-
-        try {
-            conexion = conexionDB.getConnection();
-            statement = conexion.prepareStatement(modificarTelefonos);
-
-            statement.setString(1, telefonoModificado1);
-            statement.setString(2, telefonoModificado2);
-            statement.setInt(3, id_cliente);
-
-            filas = statement.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-
-        } finally {
-
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (conexion != null) {
-                try {
-                    conexion.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return filas;
-    }
-    
-    public int AgregarTelefonos(String telefono1, String telefono2, int id_cliente) {
-
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            return 0;
-        }
-
-        Connection conexion = null;
-        PreparedStatement statement = null;
-        int filas = 0;
-
-        try {
-            conexion = conexionDB.getConnection();
-            statement = conexion.prepareStatement(insertTelefonos);
-
-            statement.setString(1, telefono1);
-            statement.setString(2, telefono2);
-            statement.setInt(3, id_cliente);
-
-            filas = statement.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-
-        } finally {
-
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (conexion != null) {
-                try {
-                    conexion.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return filas;
-    }
 
     public int eliminarCliente(int id_cliente_borrar){
 		try {
@@ -299,6 +204,7 @@ public class ClienteDao implements iClienteDao{
 	private Cliente getCliente(ResultSet resultSet) {
 		
 		Cliente cliente = null;
+		TelefonoDao telefonoDao = new TelefonoDao();
 		
 		try {
 			cliente = new Cliente();
@@ -314,6 +220,7 @@ public class ClienteDao implements iClienteDao{
 			cliente.setLocalidad(resultSet.getString("localidad"));
 			cliente.setProvincia(resultSet.getString("provincia"));
 			cliente.setCorreoElectronico(resultSet.getString("correo_electronico"));
+			cliente.setTelefonos(telefonoDao.Listar_de(cliente.getId()));
 			cliente.setEstado(resultSet.getString("estado"));	
 		}
 		catch (SQLException e) {
