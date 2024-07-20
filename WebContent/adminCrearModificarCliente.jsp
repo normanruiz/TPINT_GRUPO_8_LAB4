@@ -74,6 +74,12 @@
 				<label>E-mail</label>
 				<input type="text" name="email" id="email" <% if (cAux != null) { %> value="<%= cAux.getCorreoElectronico() %>" <% } %>>
 				<br>
+				<label>Telefono primario</label>
+				<input type="text" name="telefonoPrimario" id="telefonoPrimario" <% if (cAux != null && !(cAux.getTelefonos()).isEmpty()) { %> value="<%= (cAux.getTelefonos()).get(0) %>" <% } %>>
+				<br>
+				<label>Telefono secundario</label>
+				<input type="text" name="telefonoSecundario" id="telefonoSecundario" <% if (cAux != null && !(cAux.getTelefonos()).isEmpty()) { %> value="<%= (cAux.getTelefonos()).get(1) %>" <% } %>>
+				<br>
 
 				<% if(request.getAttribute("cliente") != null){ %>
 					<button type="submit" class="btn btn-primary" name="crearModificarCliente" id="crearModificarCliente" value="ModificarCliente" >Guardar</button>
@@ -81,7 +87,8 @@
 				<%} else { %>
 					<button type="submit" class="btn btn-primary" name="crearModificarCliente" id="crearModificarCliente" value="CrearCliente">Guardar</button>
 				<%} %>
-	
+				<br>
+				<a class="btn btn-primary" href="adminClientesServlet">Cancelar</a>
 	    </div>
 		</div>
 	

@@ -11,6 +11,9 @@ import Dominio.Telefono;
 public class TelefonoDao implements iTelefonoDao {
 	
     private static final String selectAll = "SELECT `telefonos`.`id_telefono`, `telefonos`.`telefono` FROM `bd_banco`.`telefonos` WHERE `id_cliente` = ?;";
+    private static final String insertarTelefono = "INSERT INTO `bd_banco`.`telefonos` ( `telefono`, `id_cliente` ) VALUES ( ?, ? );";
+    private static final String modificarTelefono = "UPDATE `bd_banco`.`telefonos` SET `telefono` = ? WHERE `id_telefono` = ?;";
+    
     private static final String modificarTelefonos = "UPDATE telefonos SET telefono1 = ?, telefono2 =? WHERE id_cliente =?";
     private static final String insertTelefonos = "INSERT INTO `bd_banco`.`telefonos` (telefono1, telefono2, id_cliente) VALUES (?, ?, ?)";
 	
@@ -153,7 +156,97 @@ public class TelefonoDao implements iTelefonoDao {
 		return listadoTelefonos;
 	}
     
-	private Telefono getTelefono(ResultSet resultSet) {
+    public int AgregarTelefono(int id_cliente, String telefono) {
+
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return 0;
+        }
+
+        Connection conexion = null;
+        PreparedStatement statement = null;
+        int filas = 0;
+
+        try {
+            conexion = conexionDB.getConnection();
+            statement = conexion.prepareStatement(insertarTelefono);
+            statement.setString(1, telefono);
+            statement.setInt(2, id_cliente);
+
+            filas = statement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        } finally {
+
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (conexion != null) {
+                try {
+                    conexion.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return filas;
+    }
+    
+    public int ModificarTelefono(int id, String telefono) {
+
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return 0;
+        }
+
+        Connection conexion = null;
+        PreparedStatement statement = null;
+        int filas = 0;
+
+        try {
+            conexion = conexionDB.getConnection();
+            statement = conexion.prepareStatement(modificarTelefono);
+            statement.setString(1, telefono);
+            statement.setInt(2, id);
+
+            filas = statement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        } finally {
+
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (conexion != null) {
+                try {
+                    conexion.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return filas;
+    }
+
+    private Telefono getTelefono(ResultSet resultSet) {
 		
 		Telefono telefono = null;
 		
@@ -168,6 +261,5 @@ public class TelefonoDao implements iTelefonoDao {
 		
 		return telefono;
 	}
-    
-    
+	
 }

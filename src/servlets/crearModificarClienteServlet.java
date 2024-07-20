@@ -14,8 +14,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import Dao.ClienteDao;
 import Dao.ProvinciaDao;
+import Dao.TelefonoDao;
 import Dominio.Cliente;
 import Dominio.Provincia;
+import Dominio.Telefono;
 
 /**
  * Servlet implementation class modificaClientesServlet
@@ -43,6 +45,8 @@ public class crearModificarClienteServlet extends HttpServlet {
         	int idParaModificar = Integer.parseInt(request.getParameter("clienteId"));
             ClienteDao clienteDao = new ClienteDao();
             Cliente cliente = clienteDao.buscar_con_id(idParaModificar);
+            System.out.println("Id: " + idParaModificar);
+            System.out.println("Cliente: " + cliente.toString());
             request.setAttribute("cliente", cliente);
             RequestDispatcher rd = request.getRequestDispatcher("/adminCrearModificarCliente.jsp");
             rd.forward(request, response);
@@ -63,7 +67,8 @@ public class crearModificarClienteServlet extends HttpServlet {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                Cliente cliente = new Cliente();
+                ClienteDao clienteDao = new ClienteDao();
+                Cliente cliente = clienteDao.buscar_con_id(idParaModificar);
                 cliente.setDni(request.getParameter("dni"));
                 cliente.setCuil(request.getParameter("cuil"));
                 cliente.setNombre(request.getParameter("nombre"));
@@ -75,13 +80,33 @@ public class crearModificarClienteServlet extends HttpServlet {
                 cliente.setLocalidad(request.getParameter("localidad"));
                 cliente.setProvincia(request.getParameter("provincia"));
                 cliente.setCorreoElectronico(request.getParameter("email"));
+                
+                Telefono telefonoPrimario = null;
+                try {
+                	telefonoPrimario = (cliente.getTelefonos()).get(0);
+                }  catch (IndexOutOfBoundsException e) {
+                	telefonoPrimario = new Telefono();
+                }
+                Telefono telefonoSecundario = null;
+                try {
+                	telefonoSecundario = (cliente.getTelefonos()).get(1);
+                }  catch (IndexOutOfBoundsException e) {
+                	telefonoSecundario = new Telefono();
+                }
+                telefonoPrimario.setTelefono(request.getParameter("telefonoPrimario"));
+                telefonoSecundario.setTelefono(request.getParameter("telefonoSecundario"));
+                ArrayList<Telefono> telefonos = new ArrayList<Telefono>();
+                telefonos.add(telefonoPrimario);
+                telefonos.add(telefonoSecundario);
+                cliente.setTelefonos(telefonos);
+                
                 cliente.setEstado("True");
                 cliente.setId(idParaModificar);
 
-                ClienteDao cd = new ClienteDao();
-                cd.ModificacionCliente(cliente);
+                clienteDao.ModificacionCliente(cliente);
                 RequestDispatcher rd = request.getRequestDispatcher("adminClientesServlet");
                 rd.forward(request, response);
+                
             } else {
 
             }
@@ -112,6 +137,17 @@ public class crearModificarClienteServlet extends HttpServlet {
                 cliente.setLocalidad(request.getParameter("localidad"));
                 cliente.setProvincia(request.getParameter("provincia"));
                 cliente.setCorreoElectronico(request.getParameter("email"));
+                
+
+                Telefono telefonoPrimario = new Telefono();
+                Telefono telefonoSecundario = new Telefono();
+                telefonoPrimario.setTelefono(request.getParameter("telefonoPrimario"));
+                telefonoSecundario.setTelefono(request.getParameter("telefonoSecundario"));
+                ArrayList<Telefono> telefonos = new ArrayList<Telefono>();
+                telefonos.add(telefonoPrimario);
+                telefonos.add(telefonoSecundario);
+                cliente.setTelefonos(telefonos);
+                
                 cliente.setEstado("True");
 
                 ClienteDao cd = new ClienteDao();

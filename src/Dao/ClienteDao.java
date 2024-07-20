@@ -14,10 +14,10 @@ import Dominio.Usuario;
 
 public class ClienteDao implements iClienteDao{
 	
-	private static final String buscarConId ="SELECT clientes.*,telefonos.id_telefono, telefonos.telefono1, telefonos.telefono2 " + "FROM clientes " + "LEFT JOIN telefonos ON clientes.id_cliente = telefonos.id_cliente " +  "WHERE clientes.id_cliente = ?"; 
+	private static final String selectAll = "SELECT `clientes`.`id_cliente`, `clientes`.`DNI`, `clientes`.`CUIL`, `clientes`.`nombre`, `clientes`.`apellido`, `clientes`.`sexo`, `clientes`.`nacionalidad`, `clientes`.`fecha_nacimiento`, `clientes`.`direccion`, `clientes`.`localidad`, `clientes`.`provincia`, `clientes`.`correo_electronico`, `clientes`.`estado` FROM `bd_banco`.`clientes`;";
+	private static final String buscarConId = "SELECT `clientes`.`id_cliente`, `clientes`.`DNI`, `clientes`.`CUIL`, `clientes`.`nombre`, `clientes`.`apellido`, `clientes`.`sexo`, `clientes`.`nacionalidad`, `clientes`.`fecha_nacimiento`, `clientes`.`direccion`, `clientes`.`localidad`, `clientes`.`provincia`, `clientes`.`correo_electronico`, `clientes`.`estado` FROM `bd_banco`.`clientes` WHERE `clientes`.`id_cliente` = ?;"; 
 	private static final String insertCliente = "INSERT INTO `bd_banco`.`clientes`(DNI, CUIL, nombre, apellido, sexo, nacionalidad, fecha_nacimiento, direccion, localidad, provincia, correo_electronico, estado) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String deleteCliente = "DELETE FROM `bd_banco`.`clientes` WHERE id_cliente = ?;";
-    private static final String selectAll = "SELECT * FROM bd_banco.clientes;";
     private static final String bajaLogica = "UPDATE clientes SET estado = 'false' WHERE id_cliente = ?;";
     private static final String updateCliente = "UPDATE clientes SET DNI = ?, CUIL = ?, nombre = ?, apellido = ?, sexo = ?, nacionalidad = ?, fecha_nacimiento = ?, direccion = ?, localidad = ?, provincia = ?, correo_electronico = ?, estado = ? WHERE id_cliente = ?;";
     private static final String altaLogica = "UPDATE clientes SET estado = 'true' WHERE id_cliente = ?;";
@@ -122,6 +122,12 @@ public class ClienteDao implements iClienteDao{
 	                clienteNuevo.setId(id_cliente);
 				}
 				
+	            Telefono telefonoPrimario = (clienteNuevo.getTelefonos()).get(0);
+	            Telefono telefonoSecundario = (clienteNuevo.getTelefonos()).get(1);
+		        TelefonoDao telefonoDao = new TelefonoDao();
+		        telefonoDao.AgregarTelefono(clienteNuevo.getId(), telefonoPrimario.getTelefono());
+		        telefonoDao.AgregarTelefono(clienteNuevo.getId(), telefonoSecundario.getTelefono());
+							
 				Usuario usuarioNuevo = new Usuario();
                 usuarioNuevo.setUsuario(clienteNuevo.getCorreoElectronico());
                 usuarioNuevo.setContrasena(clienteNuevo.getDni());
@@ -447,9 +453,13 @@ public class ClienteDao implements iClienteDao{
 			statement.setString(11, clienteModificar.getCorreoElectronico());
 			statement.setString(12, clienteModificar.getEstado().name());
 			statement.setInt(13,clienteModificar.getId());
-
-			
 	        filas = statement.executeUpdate();
+	        
+            Telefono telefonoPrimario = (clienteModificar.getTelefonos()).get(0);
+            Telefono telefonoSecundario = (clienteModificar.getTelefonos()).get(1);
+	        TelefonoDao telefonoDao = new TelefonoDao();
+	        telefonoDao.ModificarTelefono(telefonoPrimario.getId(), telefonoPrimario.getTelefono());
+	        telefonoDao.ModificarTelefono(telefonoSecundario.getId(), telefonoSecundario.getTelefono());
 	        
 	    } catch (SQLException e) {
 	        e.printStackTrace();
