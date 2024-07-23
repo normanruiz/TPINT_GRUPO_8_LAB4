@@ -578,7 +578,39 @@ public class ClienteDao implements iClienteDao{
 	    return listaIdClientes;
 	}
 	
+	
+	private static final String checkDniQuery = "SELECT dni FROM Clientes WHERE dni = ?;";
+
+    public boolean existeDni(String dni) {
+        boolean exists = false;
+        Connection conexion = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            conexion = conexionDB.getConnection();
+            ps = conexion.prepareStatement(checkDniQuery);
+            ps.setString(1, dni);
+            rs = ps.executeQuery();
+            exists = rs.next();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            try { if (rs != null) rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+            try { if (ps != null) ps.close(); } catch (SQLException e) { e.printStackTrace(); }
+            try { if (conexion != null) conexion.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+
+        return exists;
+
+	
+	
+	
+	
+	
 }
+    }
 
 
 

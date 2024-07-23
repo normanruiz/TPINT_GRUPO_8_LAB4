@@ -38,9 +38,9 @@ public class LoginServlet extends HttpServlet {
 		try
 		{
 	        String usuarioAux = request.getParameter("username");
-	        String contraseñaAux = request.getParameter("password");
+	        String contraseniaAux = request.getParameter("password");
 			usuarioDao = new UsuarioDao();
-			usuario = usuarioDao.Validar(usuarioAux, contraseñaAux);
+			usuario = usuarioDao.Validar(usuarioAux, contraseniaAux);
 	
 			if( usuario.getId() == 0) {
 				throw new failLoginException();

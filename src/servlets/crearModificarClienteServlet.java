@@ -57,7 +57,7 @@ public class crearModificarClienteServlet extends HttpServlet {
             rd.forward(request, response);		
         } else if (request.getParameter("crearModificarCliente").toString().equals("ModificarCliente")) {
         	int idParaModificar = Integer.parseInt(request.getParameter("idModificar"));
-            // Validación de campos
+            // Validaciï¿½n de campos
             if (validarCamposCliente(request)) {
                 // Procesamiento para modificar cliente
                 java.util.Date dateNacimiento = null;
@@ -114,8 +114,18 @@ public class crearModificarClienteServlet extends HttpServlet {
         } else if (request.getParameter("crearModificarCliente").toString().equals("CrearCliente")) {
             int filasAgregadas = 0;
         	System.out.println("Entre a crear!!!");
-            // Validación de campos
+            // Validaciï¿½n de campos
             if (validarCamposCliente(request)) {
+            	// Verificar si el DNI ya existe
+            	   ClienteDao clienteDao = new ClienteDao();
+            	   String dni = request.getParameter("dni");
+            	   if (clienteDao.existeDni(dni)) {
+            	       // Manejo de error: DNI duplicado
+            	       request.setAttribute("errorMessage", "DNI duplicado");
+            	       RequestDispatcher rd = request.getRequestDispatcher("/DniDuplicadoError.jsp");
+            	       rd.forward(request, response);
+            	
+            	
                 // Procesamiento para agregar cliente
                 java.util.Date dateNacimiento = null;
                 SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
@@ -153,11 +163,11 @@ public class crearModificarClienteServlet extends HttpServlet {
                 ClienteDao cd = new ClienteDao();
                 filasAgregadas = cd.agregarCliente(cliente);
                 System.out.println(filasAgregadas);
-                RequestDispatcher rd = request.getRequestDispatcher("adminClientesServlet");
-                rd.forward(request, response);
+                RequestDispatcher rd1 = request.getRequestDispatcher("adminClientesServlet");
+                rd1.forward(request, response);
             } else {
-                // Manejo de error: campos incompletos o inválidos
-                // Podrías redirigir a un JSP de error o mostrar un mensaje adecuado
+                // Manejo de error: campos incompletos o invï¿½lidos
+                // Podrï¿½as redirigir a un JSP de error o mostrar un mensaje adecuado
             	System.out.println("Se fue de viaje por que es una cacota!!!");
             }
 
@@ -165,6 +175,7 @@ public class crearModificarClienteServlet extends HttpServlet {
         else {
         	System.out.println("Se fue de viaje por que es una cacota!!!");
         }
+            }
         
 
 	}
